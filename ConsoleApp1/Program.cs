@@ -167,15 +167,26 @@ namespace practic4
         {
             Console.Clear();
             string path = $"{AppDomain.CurrentDomain.BaseDirectory}save.txt";
-            File.WriteAllText(path, $"Заказ от: {DateTime.Now}\nЦена: {Price}р\nЗаказ: \n {String.Join(",\n ", ListCase.ToArray())}");
-            Console.WriteLine("Спасибо за заказ! Если хотите сделать ещё один, нажмите на клавишу Esc");
-            ConsoleKeyInfo key = Console.ReadKey();
-            if (key.Key == ConsoleKey.Escape)
+            string text = $"Заказ от: {DateTime.Now}\nЦена: {Price}р\nЗаказ: \n {String.Join(",\n ", ListCase.ToArray())}";
+            if (File.Exists(path))
             {
-                ListCase = new List<string>();
-                Price = 0;
-                PageId = 0;
-                Open();
+                string text2 = File.ReadAllText(path);
+                File.WriteAllText(path, $"{text}\n{text2}");
+
+                Console.WriteLine("Спасибо за заказ! Если хотите сделать ещё один, нажмите на клавишу Esc");
+                ConsoleKeyInfo key = Console.ReadKey();
+                if (key.Key == ConsoleKey.Escape)
+                {
+                    ListCase = new List<string>();
+                    Price = 0;
+                    PageId = 0;
+                    Open();
+                }
+            }
+            else
+            {
+                File.Create(path);
+                saveButton();
             }
         }
     }
